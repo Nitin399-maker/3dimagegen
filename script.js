@@ -6,10 +6,10 @@ const DEFAULT_BASE_URLS = [
 ];
 
 const VIEWING_ANGLES = [
-    { name: "Front View", prompt: "front view, straight-on perspective" },
-    { name: "Side View", prompt: "side view, profile perspective" },
-    { name: "Top View", prompt: "top-down view, bird's eye perspective" },
-    { name: "45° Perspective", prompt: "45-degree angle perspective view, three-quarter view" }
+    { name: "Front View", prompt: "front view, straight-on perspective, centered composition, clear front-facing details" },
+    { name: "Side View", prompt: "side view, profile perspective, lateral angle, showing depth and side details" },
+    { name: "Top View", prompt: "top-down view, bird's eye perspective, overhead angle, showing complete layout" },
+    { name: "45° Perspective", prompt: "45-degree angle perspective view, three-quarter view, isometric-style angle" }
 ];
 
 let state = {
@@ -31,7 +31,7 @@ const imageToBase64 = file => new Promise((resolve, reject) => {
 });
 
 const showAlert = (title, body, color = "info") => bootstrapAlert({ title, body, color });
-const toggleLoading = (show, message = "Generating 3D images...", details = "This may take 1-2 minutes") => {
+const toggleLoading = (show, message = "Generating 3D images...", details = "This may take 30-60 seconds") => {
     const overlay = $('loading-overlay');
     if (show) {
         $('loading-message').textContent = message;
@@ -225,26 +225,23 @@ const generateImages = async () => {
     const multipleAngles = $('multiple-angles').checked;
     try {
         toggleLoading(true);
-        const results = [];
         const angles = multipleAngles ? VIEWING_ANGLES : [VIEWING_ANGLES[0]];
         const sourceImage = state.uploadedImages[state.uploadedImages.length - 1];
         const imageBase64 = await imageToBase64(sourceImage);
-        for (let i = 0; i < angles.length; i++) {
-            const angle = angles[i];
-            updateLoadingMessage(`Generating ${angle.name}... (${i + 1}/${angles.length})`);
-            try {
-                const imageUrl = await generateImageWithAPI({
-                    prompt: userPrompt,
-                    imageBase64,
-                    systemPrompt,
-                    angle
-                });
-                results.push({ imageUrl,  angle: angle.name, prompt: userPrompt });
-                if (i < angles.length - 1){await new Promise(resolve => setTimeout(resolve, 1000));}
-            } catch (error) {
+        updateLoadingMessage(`Generating ${angles.length} images in batch...`);
+        const batchPromises = angles.map(angle => 
+            generateImageWithAPI({
+                prompt: userPrompt,
+                imageBase64,
+                systemPrompt,
+                angle
+            }).then(imageUrl => ({ imageUrl, angle: angle.name, prompt: userPrompt }))
+            .catch(error => {
                 console.error(`Failed to generate ${angle.name}:`, error);
-            }
-        }
+                return null;
+            })
+        );
+        const results = (await Promise.all(batchPromises)).filter(result => result !== null);
         if (results.length > 0) {
             const isRefinement = state.hasGeneratedImages;
             displayResults(results, isRefinement);
