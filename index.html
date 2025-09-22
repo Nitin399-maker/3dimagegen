@@ -17,40 +17,52 @@
         .angle-badge { position: absolute; top: 10px; left: 10px; background-color: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; }
         .image-card { position: relative; margin-bottom: 20px; }
         .generation-status { background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 10px; margin-bottom: 15px; display: none; }
+        body {padding-top: 52px;}
+
     </style>
 </head>
 <body>
     <div class="container-fluid py-4">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary mb-2" data-bs-theme="dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href=".">Scientific Sketch to 3D Converter</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <div class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <button id="config-btn" class="btn btn-outline-primary me-2">
-                            <i class="bi bi-gear"></i> Configure API
-                        </button>
-                        <div class="nav-item dropdown" role="group" aria-label="Toggle dark mode" title="Toggle Dark Mode">
-                            <button class="dark-theme-toggle btn btn-outline-light dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle theme (auto)">
-                                <i class="bi bi-circle-half"></i> <span class="d-lg-none ms-2">Toggle theme</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><button class="dropdown-item" data-bs-theme-value="light"><i
-                                            class="me-2 bi bi-sun-fill"></i> Light</button></li>
-                                <li><button class="dropdown-item" data-bs-theme-value="dark"><i
-                                            class="me-2 bi bi-moon-stars-fill"></i> Dark</button></li>
-                                <li><button class="dropdown-item" data-bs-theme-value="auto"><i
-                                            class="me-2 bi bi-circle-half"></i> Auto</button></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand my-2" href=".">
+      <i class="bi bi-box me-2"></i>Scientific Sketch to 3D Converter
+    </a>
+
+    <!-- Config button immediately after brand -->
+    <div class="my-2">
+      <button id="config-btn" class="btn btn-primary" type="button">
+        <i class="bi bi-gear me-2"></i> Configure API
+      </button>
+    </div>
+
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar content (right side) -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <div class="d-flex flex-grow-1 gap-2 align-items-center justify-content-end">
+        <!-- Dark mode toggle -->
+        <div class="nav-item dropdown my-2" role="group" aria-label="Toggle dark mode" title="Toggle Dark Mode">
+          <button class="dark-theme-toggle btn btn-outline-light dropdown-toggle" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false" aria-label="Toggle theme (auto)">
+            <i class="bi bi-circle-half"></i> <span class="d-lg-none ms-2">Toggle theme</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" data-bs-theme-value="light"><i class="me-2 bi bi-sun-fill"></i> Light</button></li>
+            <li><button class="dropdown-item" data-bs-theme-value="dark"><i class="me-2 bi bi-moon-stars-fill"></i> Dark</button></li>
+            <li><button class="dropdown-item" data-bs-theme-value="auto"><i class="me-2 bi bi-circle-half"></i> Auto</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
         <div class="row">
             <!-- Left Panel - Upload and Controls -->
             <div class="col-lg-4 mb-4">

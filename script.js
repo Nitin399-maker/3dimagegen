@@ -1,5 +1,6 @@
 import { openaiConfig } from "https://cdn.jsdelivr.net/npm/bootstrap-llm-provider@1";
 import { bootstrapAlert } from "https://cdn.jsdelivr.net/npm/bootstrap-alert@1";
+import { openrouterHelp } from "./utils.js";
 
 const DEFAULT_BASE_URLS = [
     "https://openrouter.ai/api/v1", "https://llmfoundry.straivedemo.com/openrouter/v1"
@@ -65,7 +66,7 @@ const updateGenerateButton = () => {
 
 const loadModels = async () => {
     try {
-        const config = await openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS });
+        const config = await openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS, help: openrouterHelp });
         if (!config.models?.length) return;
         const filterModels = models => models.filter(m => /gemini|gpt-4|claude/i.test(m));
         const recommendedModel = "google/gemini-2.5-flash-image-preview";
@@ -86,7 +87,7 @@ const loadModels = async () => {
 };
 
 const generateImageWithAPI = async ({ prompt, imageBase64, systemPrompt, angle }) => {
-    const { apiKey, baseUrl } = await openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS });
+    const { apiKey, baseUrl } = await openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS, help: openrouterHelp });
     if (!apiKey) throw new Error('OpenAI API key missing. Please configure your key.');
     const model = state.selectedModel || "google/gemini-2.5-flash-image-preview";
     const fullPrompt = `${systemPrompt}\n\nUser Request: ${prompt}\n\nSpecific View: Generate this from a ${angle.prompt}. Ensure the 3D representation looks realistic and scientifically accurate.`;
@@ -228,7 +229,7 @@ const generateImages = async () => {
         const angles = multipleAngles ? VIEWING_ANGLES : [VIEWING_ANGLES[0]];
         const sourceImage = state.uploadedImages[state.uploadedImages.length - 1];
         const imageBase64 = await imageToBase64(sourceImage);
-        updateLoadingMessage(`Generating ${angles.length} images in batch...`);
+        updateLoadingMessage(`Generating ${angles.length} images...`);
         const batchPromises = angles.map(angle => 
             generateImageWithAPI({
                 prompt: userPrompt,
@@ -259,7 +260,7 @@ const generateImages = async () => {
 
 const setupEventListeners = () => {
     const elements = {
-        'config-btn': () => openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS, show: true }).then(loadModels),
+        'config-btn': () => openaiConfig({ defaultBaseUrls: DEFAULT_BASE_URLS, help: openrouterHelp, show: true }).then(loadModels),
         'model-select': e => state.selectedModel = e.target.value,
         'generation-form': e => { e.preventDefault(); generateImages(); },
     };
